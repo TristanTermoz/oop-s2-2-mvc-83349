@@ -7,3 +7,4 @@ namespace FoodSafetyTracker.Models
         public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
     }
 }
+
