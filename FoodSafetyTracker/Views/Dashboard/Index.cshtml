@@ -1,0 +1,57 @@
+﻿@model FoodSafetyTracker.Models.DashboardViewModel
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<h2>Dashboard</h2>
+
+<!-- Filter form -->
+<form method="get" class="row g-3 mb-4">
+    <div class="col-auto">
+        <select name="town" class="form-select">
+            <option value="">All towns</option>
+            @foreach (var t in Model.Towns)
+            {
+                <option value="@t" selected="@(Model.FilterTown == t)">@t</option>
+            }
+        </select>
+    </div>
+    <div class="col-auto">
+        <select name="risk" class="form-select">
+            <option value="">All risk ratings</option>
+            @foreach (var r in Enum.GetValues<FoodSafetyTracker.Models.RiskRating>())
+            {
+                <option value="@r" selected="@(Model.FilterRisk == r)">@r</option>
+            }
+        </select>
+    </div>
+    <div class="col-auto"><button class="btn btn-primary">Filter</button></div>
+</form>
+
+<!-- Stat cards -->
+<div class="row">
+    <div class="col-md-4">
+        <div class="card text-bg-info mb-3">
+            <div class="card-body">
+                <h5>Inspections This Month</h5>
+                <p class="display-4">@Model.InspectionsThisMonth</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-bg-danger mb-3">
+            <div class="card-body">
+                <h5>Failed This Month</h5>
+                <p class="display-4">@Model.FailedThisMonth</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-bg-warning mb-3">
+            <div class="card-body">
+                <h5>Overdue Open Follow-Ups</h5>
+                <p class="display-4">@Model.OverdueOpenFollowUps</p>
+            </div>
+        </div>
+    </div>
+</div>
