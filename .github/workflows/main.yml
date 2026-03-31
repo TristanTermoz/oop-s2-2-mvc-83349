@@ -42,8 +42,3 @@ jobs:
         with:
           name: coverage-report
           path: ./coverage/report
-```
-
-You also need to add the coverage NuGet package to your **Tests project**. In Package Manager Console, make sure the Default Project is set to `FoodSafetyTracker.Tests` then run:
-```
-Install-Package coverlet.collector
