@@ -6,7 +6,7 @@ public class FollowUp
 {
     public int Id { get; set; }
     public int InspectionId { get; set; }
-    public Inspection Inspection { get; set; } = null!;
+    public Inspection? Inspection { get; set; }
 
     [Required]
     public DateTime DueDate { get; set; }

@@ -9,7 +9,8 @@
 
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form asp-action="Create" method="post">
+            @Html.AntiForgeryToken()
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
             <div class="form-group">
@@ -32,12 +33,7 @@
 
             <div class="form-group">
                 <label asp-for="Outcome" class="control-label"></label>
-                <select asp-for="Outcome" class="form-control">
-                    @foreach (var outcome in Enum.GetValues<FoodSafetyTracker.Models.InspectionOutcome>())
-                    {
-                        <option value="@outcome">@outcome</option>
-                    }
-                </select>
+                <select asp-for="Outcome" class="form-control" asp-items="Html.GetEnumSelectList<FoodSafetyTracker.Models.InspectionOutcome>()"></select>
                 <span asp-validation-for="Outcome" class="text-danger"></span>
             </div>
 

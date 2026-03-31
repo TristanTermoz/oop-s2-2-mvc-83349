@@ -12,24 +12,23 @@ namespace FoodSafetyTracker.Controllers
         {
             _logger = logger;
         }
+
         public IActionResult Index()
         {
-            return View();
+            return NotFound();
         }
 
         public IActionResult Privacy()
         {
-            return View();
+            return NotFound();
         }
 
-       
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
             var requestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier;
-            _logger.LogError("Unhandled error – RequestId: {RequestId}", requestId); // LOG EVENT (Error)
+            _logger.LogError("Unhandled error – RequestId: {RequestId}", requestId);
             return View(new ErrorViewModel { RequestId = requestId });
         }
-
     }
 }

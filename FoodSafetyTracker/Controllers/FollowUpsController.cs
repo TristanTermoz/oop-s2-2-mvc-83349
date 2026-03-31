@@ -47,7 +47,10 @@ namespace FoodSafetyTracker.Controllers
         [Authorize(Roles = "Admin,Inspector")]
         public IActionResult Create()
         {
-            ViewData["InspectionId"] = new SelectList(_context.Inspections, "Id", "Id");
+            var inspections = _context.Inspections
+                .Include(i => i.Premises)
+                .Select(i => new { i.Id, Text = i.Premises.Name + " - " + i.InspectionDate.ToString("yyyy-MM-dd") });
+            ViewData["InspectionId"] = new SelectList(inspections, "Id", "Text");
             return View();
         }
 
@@ -95,7 +98,20 @@ namespace FoodSafetyTracker.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            ViewData["InspectionId"] = new SelectList(_context.Inspections, "Id", "Id", followUp.InspectionId);
+            var inspections = _context.Inspections
+                .Include(i => i.Premises)
+                .AsEnumerable()
+                .Select(i => new { i.Id, Text = i.Premises.Name + " - " + i.InspectionDate.ToString("yyyy-MM-dd") });
+            ViewData["InspectionId"] = new SelectList(inspections, "Id", "Text", followUp.InspectionId);
+            if (!ModelState.IsValid)
+            {
+                foreach (var kv in ModelState)
+                {
+                    foreach (var err in kv.Value.Errors)
+                        _logger.LogWarning("ModelState error for {Key}: {Error}", kv.Key, err.ErrorMessage);
+                }
+            }
+
             return View(followUp);
         }
 
@@ -107,8 +123,10 @@ namespace FoodSafetyTracker.Controllers
 
             var followUp = await _context.FollowUps.FindAsync(id);
             if (followUp == null) return NotFound();
-
-            ViewData["InspectionId"] = new SelectList(_context.Inspections, "Id", "Id", followUp.InspectionId);
+            var inspections = _context.Inspections
+                .Include(i => i.Premises)
+                .Select(i => new { i.Id, Text = i.Premises.Name + " - " + i.InspectionDate.ToString("yyyy-MM-dd") });
+            ViewData["InspectionId"] = new SelectList(inspections, "Id", "Text", followUp.InspectionId);
             return View(followUp);
         }
 
@@ -152,7 +170,10 @@ namespace FoodSafetyTracker.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            ViewData["InspectionId"] = new SelectList(_context.Inspections, "Id", "Id", followUp.InspectionId);
+            var inspections = _context.Inspections
+                .Include(i => i.Premises)
+                .Select(i => new { i.Id, Text = i.Premises.Name + " - " + i.InspectionDate.ToString("yyyy-MM-dd") });
+            ViewData["InspectionId"] = new SelectList(inspections, "Id", "Text", followUp.InspectionId);
             return View(followUp);
         }
 

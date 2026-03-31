@@ -67,6 +67,16 @@ namespace FoodSafetyTracker.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["PremisesId"] = new SelectList(_context.Premises, "Id", "Name", inspection.PremisesId);
+            // Log ModelState errors to help debugging
+            if (!ModelState.IsValid)
+            {
+                foreach (var kv in ModelState)
+                {
+                    foreach (var err in kv.Value.Errors)
+                        _logger.LogWarning("ModelState error for {Key}: {Error}", kv.Key, err.ErrorMessage);
+                }
+            }
+
             return View(inspection);
         }
 

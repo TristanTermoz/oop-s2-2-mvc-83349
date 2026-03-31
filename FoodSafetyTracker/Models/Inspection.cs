@@ -6,7 +6,7 @@ public class Inspection
 {
     public int Id { get; set; }
     public int PremisesId { get; set; }
-    public Premises Premises { get; set; } = null!;
+    public Premises? Premises { get; set; }
 
     [Required]
     public DateTime InspectionDate { get; set; }
