@@ -1,4 +1,4 @@
-name: CI
+name: Coverage
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: [ master ]
 
 jobs:
-  build-and-test:
+  coverage:
     runs-on: ubuntu-latest
 
     steps:
@@ -24,5 +24,26 @@ jobs:
       - name: Build
         run: dotnet build --no-restore --configuration Release
 
-      - name: Test
-        run: dotnet test --no-build --configuration Release --verbosity normal
+      - name: Test with coverage
+        run: dotnet test --no-build --configuration Release --verbosity normal \
+          --collect:"XPlat Code Coverage" \
+          --results-directory ./coverage
+
+      - name: Generate coverage report
+        run: |
+          dotnet tool install -g dotnet-reportgenerator-globaltool
+          reportgenerator \
+            -reports:./coverage/**/coverage.cobertura.xml \
+            -targetdir:./coverage/report \
+            -reporttypes:HtmlInline_AzurePipelines
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: ./coverage/report
+```
+
+You also need to add the coverage NuGet package to your **Tests project**. In Package Manager Console, make sure the Default Project is set to `FoodSafetyTracker.Tests` then run:
+```
+Install-Package coverlet.collector
